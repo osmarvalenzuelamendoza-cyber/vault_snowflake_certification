@@ -63,12 +63,12 @@ Componente crítico evaluado en el examen. Gestiona:
 
 ### Mecanismos de Transformación — Domain 3/4
 
-|Mecanismo|Descripción|
-|---|---|
-|**Dynamic Tables**|Se refrescan automáticamente según target de freshness definido por query SQL|
-|**Streams + Tasks**|Streams capturan cambios (CDC), Tasks ejecutan transformaciones programadas|
-|**Snowpark**|Transformaciones complejas en Python, Java, Scala dentro de Snowflake|
-|**dbt**|Framework open-source de transformación SQL integrado con Snowflake|
+| Mecanismo           | Descripción                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| **Dynamic Tables**  | Se refrescan automáticamente según target de freshness definido por query SQL |
+| **Streams + Tasks** | Streams capturan cambios (CDC), Tasks ejecutan transformaciones programadas   |
+| **Snowpark**        | Transformaciones complejas en Python, Java, Scala dentro de Snowflake         |
+| **dbt**             | Framework open-source de transformación SQL integrado con Snowflake           |
 
 ---
 
@@ -84,10 +84,10 @@ Componente crítico evaluado en el examen. Gestiona:
 
 ### AI/ML — Domain 1
 
-|Suite|Función|
-|---|---|
-|**Snowflake Cortex**|Features de AI con LLMs para datos no estructurados, preguntas en lenguaje natural, resúmenes, traducciones. Incluye Cortex AI Functions, Cortex Search, Cortex Analyst|
-|**Snowflake ML**|Construcción de modelos propios. ML Functions para predicciones automatizadas|
+| Suite                | Función                                                                                                                                                                 |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Snowflake Cortex** | Features de AI con LLMs para datos no estructurados, preguntas en lenguaje natural, resúmenes, traducciones. Incluye Cortex AI Functions, Cortex Search, Cortex Analyst |
+| **Snowflake ML**     | Construcción de modelos propios. ML Functions para predicciones automatizadas                                                                                           |
 
 ---
 

@@ -1,0 +1,29 @@
+- Understanding Snowflake Table Structures: https://docs.snowflake.com/en/user-guide/tables-micro-partitions
+    - Micro-partitions & Data Clustering: https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions
+    - Clustering Keys & Clustered Tables: https://docs.snowflake.com/en/user-guide/tables-clustering-keys
+    - Automatic Clustering: https://docs.snowflake.com/en/user-guide/tables-auto-reclustering
+- Working with Temporary and Transient Tables: https://docs.snowflake.com/en/user-guide/tables-temp-transient
+- Introduction to external tables: https://docs.snowflake.com/en/user-guide/tables-external-intro
+    - Refresh external tables automatically for Google Cloud Storage: https://docs.snowflake.com/en/user-guide/tables-external-gcs
+    - Troubleshooting external tables: https://docs.snowflake.com/en/user-guide/tables-external-ts
+- Hybrid tables: https://docs.snowflake.com/en/user-guide/tables-hybrid
+    - Best practices for hybrid tables: https://docs.snowflake.com/en/user-guide/tables-hybrid-best-practices
+    - Limitations and unsupported features for hybrid tables: https://docs.snowflake.com/en/user-guide/tables-hybrid-limitations
+- Snowflake interactive tables and interactive warehouses: https://docs.snowflake.com/en/user-guide/interactive
+- Search optimization service: https://docs.snowflake.com/en/user-guide/search-optimization-service
+    - Identifying queries that can benefit from search optimization: https://docs.snowflake.com/en/user-guide/search-optimization/queries-that-benefit
+    - Determining the benefits of search optimization: https://docs.snowflake.com/en/user-guide/search-optimization/view-benefits
+    - Search optimization cost estimation and management: https://docs.snowflake.com/en/user-guide/search-optimization/cost-estimation
+    - Working with search-optimized tables: https://docs.snowflake.com/en/user-guide/search-optimization/working-with-tables
+- Overview of Views: https://docs.snowflake.com/en/user-guide/views-introduction
+- Working with Secure Views: https://docs.snowflake.com/en/user-guide/views-secure
+- Working with Materialized Views: https://docs.snowflake.com/en/user-guide/views-materialized
+- Overview of semantic views: https://docs.snowflake.com/en/user-guide/views-semantic/overview
+    - Best practices for semantic views: https://docs.snowflake.com/en/user-guide/views-semantic/best-practices-dev
+    - Suggestions for semantic models and views: https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst/verified-query-suggestions
+    - How Snowflake validates semantic views: https://docs.snowflake.com/en/user-guide/views-semantic/validation-rules
+- Working with views in Snowsight: https://docs.snowflake.com/en/user-guide/ui-snowsight-data-databases-view
+- Views, materialized views, and dynamic tables: https://docs.snowflake.com/en/user-guide/overview-view-mview-dts
+- Table Design Considerations: https://docs.snowflake.com/en/user-guide/table-considerations
+- Cloning considerations: https://docs.snowflake.com/en/user-guide/object-clone
+- Data storage considerations: https://docs.snowflake.com/en/user-guide/tables-storage-considerations

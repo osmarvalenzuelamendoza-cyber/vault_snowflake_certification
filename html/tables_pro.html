@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnowPro Core — Tables, Views & Storage</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;700&family=Fraunces:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #222633;
+  --border: #2d3148;
+  --text: #e2e4ed;
+  --text-muted: #8b90a5;
+  --accent: #29b5f6;
+  --accent2: #7c4dff;
+  --green: #66bb6a;
+  --orange: #ffa726;
+  --red: #ef5350;
+  --pink: #ec407a;
+  --teal: #26a69a;
+  --yellow: #ffee58;
+  --cloud-bg: #1b2a3a;
+  --cloud-border: #2e4a6a;
+  --exam-bg: #2a1a2e;
+  --exam-border: #5a2d6a;
+  --trap-bg: #2e2a1a;
+  --trap-border: #6a5a2d;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s;
+}
+
+.sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.sidebar-header h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+
+.sidebar-header .badge {
+  display: inline-block;
+  background: var(--accent2);
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 6px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  color: var(--accent);
+  background: rgba(41,181,246,0.06);
+  border-left-color: var(--accent);
+}
+
+.sidebar nav .nav-group {
+  padding: 12px 20px 4px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: 280px;
+  flex: 1;
+  padding: 40px 48px 80px;
+  max-width: 960px;
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 32px;
+}
+
+h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 48px 0 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: #fff;
+}
+
+h2 .domain-tag {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 28px 0 10px;
+  color: var(--accent);
+}
+
+h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 20px 0 8px;
+  color: var(--teal);
+}
+
+p { margin-bottom: 14px; }
+
+strong, b { color: #fff; font-weight: 700; }
+
+.highlight {
+  background: rgba(41,181,246,0.15);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* TOP 10 BOX */
+.top10 {
+  background: linear-gradient(135deg, #1a2740 0%, #1e1a35 100%);
+  border: 1px solid var(--accent2);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 40px;
+}
+
+.top10 h2 {
+  border: none;
+  margin-top: 0;
+  padding-top: 0;
+  font-size: 1.3rem;
+}
+
+.top10 ol {
+  padding-left: 20px;
+}
+
+.top10 ol li {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.top10 ol li::marker {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* CLOUD ANALOGY BOX */
+.cloud-box {
+  background: var(--cloud-bg);
+  border: 1px solid var(--cloud-border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 16px 0;
+  font-size: 0.88rem;
+}
+
+.cloud-box::before {
+  content: '☁️ Analogía GCP/AWS';
+  display: block;
+  font-weight: 700;
+  color: var(--orange);
+  margin-bottom: 6px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* EXAM QUESTION BOX */
+.exam-box {
+  background: var(--exam-bg);
+  border: 1px solid var(--exam-border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 16px 0;
+  font-size: 0.88rem;
+}
+
+.exam-box::before {
+  content: '⚠️ Posible pregunta de examen';
+  display: block;
+  font-weight: 700;
+  color: var(--pink);
+  margin-bottom: 6px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* TRAP BOX */
+.trap-box {
+  background: var(--trap-bg);
+  border: 1px solid var(--trap-border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 16px 0;
+  font-size: 0.88rem;
+}
+
+.trap-box::before {
+  content: '🪤 Trampa frecuente';
+  display: block;
+  font-weight: 700;
+  color: var(--yellow);
+  margin-bottom: 6px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* KEY CONCEPTS */
+.key-concepts {
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 14px 0;
+}
+
+.key-concepts::before {
+  content: '🔑 Conceptos clave';
+  display: block;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.key-concepts span {
+  display: inline-block;
+  background: rgba(102,187,106,0.12);
+  color: var(--green);
+  padding: 2px 10px;
+  border-radius: 6px;
+  margin: 3px 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* CODE BLOCKS */
+pre {
+  background: #0d0f15;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 14px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #c5cae9;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  background: rgba(41,181,246,0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* TABLE COMPARISON */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.82rem;
+}
+
+.comparison-table th {
+  background: var(--surface2);
+  padding: 10px 14px;
+  text-align: left;
+  color: var(--accent);
+  font-weight: 700;
+  border-bottom: 2px solid var(--border);
+}
+
+.comparison-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison-table tr:hover td {
+  background: rgba(41,181,246,0.04);
+}
+
+/* SECTION COLORS */
+.section-micro { border-left: 4px solid var(--accent); padding-left: 20px; }
+.section-tables { border-left: 4px solid var(--green); padding-left: 20px; }
+.section-external { border-left: 4px solid var(--orange); padding-left: 20px; }
+.section-hybrid { border-left: 4px solid var(--pink); padding-left: 20px; }
+.section-search { border-left: 4px solid var(--teal); padding-left: 20px; }
+.section-views { border-left: 4px solid var(--accent2); padding-left: 20px; }
+.section-clone { border-left: 4px solid var(--yellow); padding-left: 20px; }
+.section-storage { border-left: 4px solid var(--red); padding-left: 20px; }
+.section-design { border-left: 4px solid #78909c; padding-left: 20px; }
+
+/* MOBILE */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 24px 18px 60px; }
+  .menu-toggle { display: block; }
+  h1 { font-size: 1.6rem; margin-top: 40px; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰ Menú</button>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h2>❄️ SnowPro Core</h2>
+    <div>Tables, Views & Storage</div>
+    <div class="badge">COF-C03 • 2026</div>
+  </div>
+  <nav>
+    <a href="#top10">🏆 Top 10 Conceptos</a>
+    <div class="nav-group">Domain 1.5 — Storage</div>
+    <a href="#micro">Micro-partitions</a>
+    <a href="#clustering">Clustering Keys</a>
+    <a href="#auto-cluster">Automatic Clustering</a>
+    <a href="#table-types">Tipos de Tablas</a>
+    <a href="#external">External Tables</a>
+    <a href="#hybrid">Hybrid Tables</a>
+    <a href="#search-opt">Search Optimization</a>
+    <div class="nav-group">Domain 1.5 — Views</div>
+    <a href="#views">Vistas Estándar</a>
+    <a href="#secure-views">Secure Views</a>
+    <a href="#mat-views">Materialized Views</a>
+    <a href="#views-compare">Views vs MV vs DT</a>
+    <div class="nav-group">Consideraciones</div>
+    <a href="#table-design">Diseño de Tablas</a>
+    <a href="#cloning">Cloning</a>
+    <a href="#storage">Data Storage & CDP</a>
+    <div class="nav-group">Cierre</div>
+    <a href="#traps">🪤 Trampas del Examen</a>
+  </nav>
+</aside>
+
+<main class="main">
+
+<h1>Tables, Views & Storage</h1>
+<p class="subtitle">Guía de estudio SnowPro Core COF-C03 — Dominios 1.5, 4.2, 5.1 | Basado en documentación oficial de Snowflake</p>
+
+<!-- ==================== TOP 10 ==================== -->
+<div class="top10" id="top10">
+  <h2>🏆 Los 10 Conceptos Más Importantes</h2>
+  <ol>
+    <li><b>Micro-partitions</b> — Unidades de 50-500 MB (sin comprimir), columnar, automáticas, inmutables. Son la base de todo pruning.</li>
+    <li><b>Clustering Keys</b> — Solo para tablas multi-TB. Máximo 3-4 columnas, de menor a mayor cardinalidad. No aplican a Hybrid Tables.</li>
+    <li><b>Automatic Clustering</b> — Servicio serverless. No usa tu warehouse. Se suspende/resume con ALTER TABLE. Tablas clonadas inician con AC suspendido.</li>
+    <li><b>Tabla Permanent vs Transient vs Temporary</b> — Diferencia clave: Time Travel (0-1 día en transient/temp, hasta 90 en permanent) y Fail-safe (0 en transient/temp, 7 en permanent).</li>
+    <li><b>External Tables</b> — Read-only. Datos en external stage. Columna VALUE (VARIANT) + pseudocolumnas. Se pueden particionar.</li>
+    <li><b>Hybrid Tables</b> — Row-store + columnar async. Primary key obligatorio. Soportan constraints enforced (UNIQUE, FK). Para workloads OLTP (Unistore).</li>
+    <li><b>Search Optimization Service</b> — Crea un <em>search access path</em>. Enterprise Edition+. Serverless. Ideal para point lookups, VARIANT queries, geospatial.</li>
+    <li><b>Secure Views</b> — Ocultan la definición SQL y evitan optimizaciones que podrían filtrar datos. Obligatorias para data sharing.</li>
+    <li><b>Materialized Views</b> — Pre-computadas, mantenidas automáticamente (serverless). Enterprise Edition+. No permiten JOINs. Soportan clustering keys.</li>
+    <li><b>Zero-Copy Cloning</b> — Comparte micro-partitions. Sin costo de storage adicional hasta que hay cambios (DML). Metadata-only al inicio.</li>
+  </ol>
+</div>
+
+<!-- ==================== MICRO-PARTITIONS ==================== -->
+<section id="micro" class="section-micro">
+  <h2>Micro-partitions & Data Clustering <span class="domain-tag">Domain 1.5</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Snowflake divide automáticamente todos los datos de las tablas en <b>micro-partitions</b>: unidades contiguas de almacenamiento de entre <b>50 MB y 500 MB de datos sin comprimir</b>. Internamente se almacenan comprimidos y en formato <b>columnar</b>. Este particionamiento es transparente — no requiere DDL ni mantenimiento manual.</p>
+  <p>Snowflake almacena <b>metadatos</b> por cada micro-partition: rango de valores por columna, número de valores distintos, y propiedades adicionales para optimización. Esto permite un <b>pruning extremadamente granular</b>.</p>
+
+  <h4>Beneficios clave</h4>
+  <p>Las micro-partitions son automáticas (no se definen manualmente), su tamaño pequeño permite DML eficiente y pruning fino, pueden tener rangos de valores que se solapan (evitando data skew), cada columna se almacena y comprime de forma independiente, y Snowflake elige el algoritmo de compresión óptimo por columna.</p>
+
+  <h4>Impacto en operaciones</h4>
+  <p>Las operaciones DML como DELETE, UPDATE y MERGE aprovechan los metadatos de micro-partitions. Algunas operaciones como borrar todas las filas son metadata-only. Cuando se hace DROP de una columna, las micro-partitions <b>no se reescriben inmediatamente</b> — los datos de la columna eliminada permanecen en storage.</p>
+  <p>El <b>query pruning</b> funciona en dos niveles: primero pruna micro-partitions completas que no coinciden con el filtro, luego escanea solo las columnas necesarias dentro de cada micro-partition seleccionada. Los predicados con subqueries no se usan para pruning.</p>
+
+  <h4>Data Clustering & Clustering Depth</h4>
+  <p>Los datos se ordenan naturalmente según cómo fueron insertados. El <b>clustering depth</b> mide la profundidad promedio de solapamiento de micro-partitions para un conjunto de columnas. Un depth más pequeño indica mejor clustering. Se monitorea con <code>SYSTEM$CLUSTERING_INFORMATION</code> y <code>SYSTEM$CLUSTERING_DEPTH</code>.</p>
+
+  <div class="key-concepts">
+    <span>micro-partition</span>
+    <span>50-500 MB</span>
+    <span>columnar storage</span>
+    <span>pruning</span>
+    <span>clustering depth</span>
+    <span>metadata</span>
+    <span>SYSTEM$CLUSTERING_INFORMATION</span>
+    <span>SYSTEM$CLUSTERING_DEPTH</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>BigQuery (GCP)</b>, el equivalente conceptual son las "partitions" y el clustering automático, pero BigQuery usa particionamiento explícito por columna (DATE, TIMESTAMP, INT). En Snowflake es totalmente automático y transparente. En <b>AWS Redshift</b>, el equivalente son los sort keys y distribution keys, pero requieren definición manual y VACUUM para mantenimiento.
+  </div>
+
+  <div class="exam-box">
+    <b>¿Cuál es el tamaño de una micro-partition?</b> → 50-500 MB sin comprimir.<br>
+    <b>¿Las micro-partitions requieren definición manual?</b> → No, son automáticas.<br>
+    <b>¿Qué metadatos almacena Snowflake por micro-partition?</b> → Rango de valores, valores distintos, propiedades de optimización.<br>
+    <b>¿Qué pasa cuando se hace DROP COLUMN?</b> → Las micro-partitions NO se reescriben; los datos persisten en storage.
+  </div>
+</section>
+
+<!-- ==================== CLUSTERING KEYS ==================== -->
+<section id="clustering" class="section-micro">
+  <h2>Clustering Keys & Clustered Tables <span class="domain-tag">Domain 4.2</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Un <b>clustering key</b> es un subconjunto de columnas (o expresiones) designadas para co-localizar datos en las mismas micro-partitions. Están pensados para <b>tablas muy grandes (multi-terabyte)</b> donde el orden natural se ha degradado por DML extensivo.</p>
+
+  <h4>Cuándo usar clustering keys</h4>
+  <p>Se debe considerar cuando: las queries son más lentas de lo esperado, el clustering depth es alto, la tabla tiene muchas micro-partitions (multi-TB), las queries son selectivas o hacen ORDER BY, y un alto porcentaje de queries se beneficiaría de las mismas columnas.</p>
+  <p><b>Importante:</b> los clustering keys generan costos de compute (serverless) y storage adicional. Son más costo-efectivos en tablas consultadas frecuentemente y que cambian poco.</p>
+
+  <h4>Estrategias de selección</h4>
+  <p>Máximo <b>3-4 columnas</b>. Priorizar: primero columnas usadas en filtros selectivos (ej: fecha), luego columnas de JOINs. Ordenar de <b>menor a mayor cardinalidad</b>. Para columnas de alta cardinalidad (ej: timestamps), usar expresiones como <code>TO_DATE(c_timestamp)</code> para reducir la cardinalidad. Para VARCHAR, solo se usan los primeros 5 bytes para clustering metadata.</p>
+
+  <pre><code>-- Crear tabla con clustering key
+CREATE TABLE t1 (c1 DATE, c2 STRING, c3 NUMBER) CLUSTER BY (c1, c2);
+
+-- Clustering por expresiones
+CREATE TABLE t2 (c1 TIMESTAMP, c2 STRING) 
+  CLUSTER BY (TO_DATE(c1), SUBSTRING(c2, 0, 10));
+
+-- Clustering por paths en VARIANT
+CREATE TABLE t3 (t TIMESTAMP, v VARIANT) 
+  CLUSTER BY (v:"Data":id::NUMBER);
+
+-- Modificar clustering key
+ALTER TABLE t1 CLUSTER BY (c1, c3);
+
+-- Eliminar clustering key
+ALTER TABLE t1 DROP CLUSTERING KEY;</code></pre>
+
+  <h4>Reclustering</h4>
+  <p>El reclustering es <b>automático</b> (Automatic Clustering). Re-organiza micro-partitions según el clustering key. Genera nuevas micro-partitions y marca las originales como eliminadas (pero persisten para Time Travel y Fail-safe). Las micro-partitions originales se purgan después de 8-97 días.</p>
+
+  <div class="key-concepts">
+    <span>CLUSTER BY</span>
+    <span>3-4 columnas máx</span>
+    <span>menor a mayor cardinalidad</span>
+    <span>TO_DATE()</span>
+    <span>TRUNC()</span>
+    <span>5 bytes VARCHAR</span>
+    <span>reclustering</span>
+    <span>serverless credits</span>
+  </div>
+
+  <div class="exam-box">
+    <b>¿Se pueden definir clustering keys en Hybrid Tables?</b> → NO. En Hybrid Tables los datos se ordenan por primary key.<br>
+    <b>¿Qué tipos de datos NO se pueden usar en clustering keys?</b> → GEOGRAPHY, VARIANT, OBJECT, ARRAY (directamente; se permiten expresiones sobre paths en VARIANT).<br>
+    <b>¿Qué pasa con clustering keys al clonar una tabla?</b> → Se copian, pero Automatic Clustering queda SUSPENDIDO en el clon.
+  </div>
+</section>
+
+<!-- ==================== AUTOMATIC CLUSTERING ==================== -->
+<section id="auto-cluster" class="section-micro">
+  <h2>Automatic Clustering <span class="domain-tag">Domain 4.2</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Servicio de Snowflake que <b>gestiona todo el reclustering automáticamente</b>. No requiere que designes un warehouse — usa <b>serverless compute</b>. Es non-blocking (no bloquea DML mientras recluster). Solo recluster si la tabla se beneficiaría.</p>
+
+  <h4>Control</h4>
+  <pre><code>-- Suspender
+ALTER TABLE t1 SUSPEND RECLUSTER;
+
+-- Reanudar
+ALTER TABLE t1 RESUME RECLUSTER;
+
+-- Estimar costos
+SELECT SYSTEM$ESTIMATE_AUTOMATIC_CLUSTERING_COSTS('db.schema.table', '(c1, c2)');</code></pre>
+
+  <h4>Costos</h4>
+  <p>Se cobran credits por serverless compute. El storage puede aumentar por Fail-safe de micro-partitions eliminadas. Los <b>resource monitors NO pueden controlar</b> el crédito del warehouse AUTOMATIC_CLUSTERING. Para monitorear costos se usa <code>AUTOMATIC_CLUSTERING_HISTORY</code> (vista en Account Usage o función en Information Schema).</p>
+
+  <div class="key-concepts">
+    <span>serverless</span>
+    <span>SUSPEND RECLUSTER</span>
+    <span>RESUME RECLUSTER</span>
+    <span>non-blocking DML</span>
+    <span>AUTOMATIC_CLUSTERING_HISTORY</span>
+    <span>SYSTEM$ESTIMATE_AUTOMATIC_CLUSTERING_COSTS</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>BigQuery</b>, el clustering es automático y gratuito (sin costo extra de mantenimiento). En <b>Redshift</b>, necesitas ejecutar VACUUM manualmente o programar automatic table sort. Snowflake es intermedio: automático pero con costo serverless.
+  </div>
+
+  <div class="exam-box">
+    <b>¿Automatic Clustering usa tu virtual warehouse?</b> → NO, usa serverless compute.<br>
+    <b>¿Se puede usar Resource Monitor para controlar costos de AC?</b> → NO.<br>
+    <b>¿Qué pasa con AC al clonar una tabla?</b> → AC se SUSPENDE en la tabla clonada, incluso si estaba activo en la fuente.
+  </div>
+</section>
+
+<!-- ==================== TABLE TYPES ==================== -->
+<section id="table-types" class="section-tables">
+  <h2>Tipos de Tablas: Permanent, Temporary, Transient <span class="domain-tag">Domain 1.5</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Snowflake tiene tres tipos principales de tablas estándar que se diferencian por su persistencia, Time Travel y Fail-safe.</p>
+
+  <table class="comparison-table">
+    <thead>
+      <tr><th>Característica</th><th>Permanent</th><th>Transient</th><th>Temporary</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Persistencia</b></td><td>Hasta DROP explícito</td><td>Hasta DROP explícito</td><td>Solo durante la sesión</td></tr>
+      <tr><td><b>Time Travel</b></td><td>0-90 días (Enterprise+)</td><td>0-1 día</td><td>0-1 día</td></tr>
+      <tr><td><b>Fail-safe</b></td><td>7 días</td><td>0 días</td><td>0 días</td></tr>
+      <tr><td><b>Visible a otros usuarios</b></td><td>Sí</td><td>Sí</td><td>No (solo sesión actual)</td></tr>
+      <tr><td><b>Se puede convertir</b></td><td>—</td><td>No</td><td>No</td></tr>
+      <tr><td><b>Cloning target</b></td><td>Perm/Trans/Temp</td><td>Trans/Temp</td><td>Trans/Temp</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Temporary Tables</h4>
+  <p>Solo existen en la sesión. Si se crea una temporary table con el mismo nombre que una permanente, la <b>temporary tiene precedencia</b> en esa sesión (oculta la permanente). No requiere privilegio CREATE TABLE en el schema. Se recomienda hacer DROP explícito antes de terminar la sesión.</p>
+
+  <h4>Transient Tables</h4>
+  <p>Sin Fail-safe = menos costos de storage. Ideal para datos transitorios que deben persistir entre sesiones. Se pueden crear schemas y databases transient, y todo dentro hereda la condición transient.</p>
+
+  <pre><code>CREATE TEMPORARY TABLE tmp (id NUMBER, dt DATE);
+CREATE TRANSIENT TABLE trn (id NUMBER, dt DATE);
+CREATE TRANSIENT SCHEMA my_schema;   -- todo adentro será transient
+CREATE TRANSIENT DATABASE my_db;     -- todo adentro será transient</code></pre>
+
+  <div class="key-concepts">
+    <span>TEMPORARY</span>
+    <span>TRANSIENT</span>
+    <span>PERMANENT</span>
+    <span>Fail-safe</span>
+    <span>Time Travel 0-1 vs 0-90</span>
+    <span>session-scoped</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>BigQuery</b>, las tablas temporales se crean con <code>CREATE TEMP TABLE</code> y expiran en 24h o al terminar el script. No hay concepto de "transient". En <b>Redshift</b>, las tablas temporales también son session-scoped, y no hay equivalente directo a transient con Fail-safe deshabilitado.
+  </div>
+
+  <div class="exam-box">
+    <b>¿Las tablas temporales tienen Fail-safe?</b> → NO (0 días).<br>
+    <b>¿Las tablas transient tienen Fail-safe?</b> → NO (0 días).<br>
+    <b>¿Se puede convertir una tabla temporary a permanent?</b> → NO.<br>
+    <b>¿Se pueden crear Hybrid Tables temporales o transient?</b> → NO.
+  </div>
+</section>
+
+<!-- ==================== EXTERNAL TABLES ==================== -->
+<section id="external" class="section-external">
+  <h2>External Tables <span class="domain-tag">Domain 1.5 / 3.1</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Una <b>external table</b> permite consultar datos en un external stage (S3, GCS, Azure Blob) como si fueran una tabla. Snowflake almacena metadatos de archivos pero <b>los datos permanecen fuera</b>. Son <b>read-only</b> (no DML). Soportan todos los formatos de COPY INTO excepto XML.</p>
+
+  <h4>Columnas predeterminadas</h4>
+  <p><b>VALUE</b> (VARIANT): contiene cada fila como variant. <b>METADATA$FILENAME</b>: nombre del archivo + path. <b>METADATA$FILE_ROW_NUMBER</b>: número de fila dentro del archivo. Se pueden definir <b>virtual columns</b> como expresiones sobre VALUE.</p>
+
+  <h4>Partitioned External Tables</h4>
+  <p>Se recomienda <b>fuertemente particionar</b> las external tables. Las particiones se pueden agregar automáticamente (expresiones sobre METADATA$FILENAME) o manualmente. La partición mejora el rendimiento al escanear solo slices relevantes.</p>
+
+  <h4>Rendimiento</h4>
+  <p>Las queries sobre external tables son más lentas que sobre tablas nativas. Para mejorar performance se pueden crear <b>materialized views sobre external tables</b>. Para archivos Parquet, considerar usar Apache Iceberg™ tables.</p>
+
+  <div class="key-concepts">
+    <span>external stage</span>
+    <span>read-only</span>
+    <span>VALUE (VARIANT)</span>
+    <span>METADATA$FILENAME</span>
+    <span>METADATA$FILE_ROW_NUMBER</span>
+    <span>virtual columns</span>
+    <span>partitioned</span>
+    <span>materialized view sobre external table</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>BigQuery</b>, el equivalente son las <b>external tables</b> (federated queries) sobre Cloud Storage, Drive, etc. En <b>AWS</b>, es como usar <b>Athena + Glue Catalog</b> para consultar datos en S3. La diferencia clave es que Snowflake gestiona los metadatos internamente con refresh automático via notificaciones (SQS, GCS Pub/Sub, Event Grid).
+  </div>
+
+  <div class="exam-box">
+    <b>¿Se puede hacer INSERT en una external table?</b> → NO, son read-only.<br>
+    <b>¿Qué formato NO soportan las external tables?</b> → XML.<br>
+    <b>¿Cómo mejorar el rendimiento de queries sobre external tables?</b> → Crear materialized views sobre ellas, o usar particionamiento.<br>
+    <b>¿Cuál es el tamaño recomendado para archivos Parquet en external tables?</b> → 256-512 MB para archivos, 16-256 MB para row groups.
+  </div>
+</section>
+
+<!-- ==================== HYBRID TABLES ==================== -->
+<section id="hybrid" class="section-hybrid">
+  <h2>Hybrid Tables <span class="domain-tag">Domain 1.5</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Las <b>Hybrid Tables</b> son un tipo de tabla optimizado para <b>baja latencia y alto throughput</b> con lectura/escritura basadas en índices. Usan un <b>row-store</b> como storage primario con copia asíncrona a columnar (object storage). Soportan <b>row locking</b> para alta concurrencia y <b>constraints enforced</b> (UNIQUE, FK, NOT NULL).</p>
+
+  <h4>Arquitectura</h4>
+  <p>Se integran en la misma arquitectura de Snowflake: mismo query engine, mismos warehouses. Se pueden hacer JOINs con tablas estándar en la misma transacción atómica sin necesidad de two-phase commit.</p>
+
+  <h4>Casos de uso (Unistore)</h4>
+  <p>Metadata de aplicaciones con alta concurrencia de updates, serving de agregados pre-computados con baja latencia, aplicaciones transaccionales ligeras con modelo relacional.</p>
+
+  <h4>Limitaciones clave</h4>
+  <p>No soportan clustering keys (datos ordenados por PK), no se pueden crear como TEMPORARY ni TRANSIENT, no se crean dentro de schemas/databases transient, disponibles solo en <b>AWS y Azure</b> (no GCP al momento de la doc).</p>
+
+  <pre><code>CREATE OR REPLACE HYBRID TABLE my_hybrid (
+  id INT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  category_id INT,
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+);</code></pre>
+
+  <div class="key-concepts">
+    <span>HYBRID TABLE</span>
+    <span>row-store</span>
+    <span>PRIMARY KEY obligatorio</span>
+    <span>constraints enforced</span>
+    <span>Unistore</span>
+    <span>row locking</span>
+    <span>OLTP + OLAP</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>GCP</b>, el equivalente sería usar <b>Cloud Spanner</b> o <b>Bigtable</b> para workloads OLTP junto con BigQuery para analytics. En <b>AWS</b>, sería <b>Aurora + Redshift</b> combinados con zero-ETL. Snowflake Hybrid Tables unifican ambos en una sola plataforma.
+  </div>
+
+  <div class="exam-box">
+    <b>¿Las Hybrid Tables soportan clustering keys?</b> → NO.<br>
+    <b>¿Las constraints (FK, UNIQUE) se enforzan en standard tables?</b> → NO (solo informational, excepto NOT NULL). En Hybrid Tables SÍ se enforzan.<br>
+    <b>¿Qué tipo de storage primario usan?</b> → Row-store.<br>
+    <b>¿Se pueden crear en GCP?</b> → NO al momento (solo AWS y Azure).
+  </div>
+</section>
+
+<!-- ==================== SEARCH OPTIMIZATION ==================== -->
+<section id="search-opt" class="section-search">
+  <h2>Search Optimization Service <span class="domain-tag">Domain 4.2</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Servicio que crea y mantiene un <b>search access path</b>: estructura persistente que rastrea qué valores están en qué micro-partitions. Permite saltar micro-partitions en queries de tipo lookup. Requiere <b>Enterprise Edition</b> o superior.</p>
+
+  <h4>Tipos de queries que beneficia</h4>
+  <p>Point lookups selectivos (igualdad, IN), búsquedas de texto (SEARCH, SEARCH_IP), substring y regex (LIKE, ILIKE, RLIKE), queries sobre elementos en columnas VARIANT/OBJECT/ARRAY, queries geospatiales con GEOGRAPHY, y queries sobre tipos estructurados (structured ARRAY, OBJECT, MAP).</p>
+
+  <h4>Cómo funciona</h4>
+  <p>Un servicio de mantenimiento crea y actualiza el search access path de forma <b>serverless</b>. Se habilita con <code>ALTER TABLE ... ADD SEARCH OPTIMIZATION</code>. Se puede activar para columnas específicas o para toda la tabla.</p>
+
+  <pre><code>-- Habilitar para toda la tabla
+ALTER TABLE t1 ADD SEARCH OPTIMIZATION;
+
+-- Habilitar para columnas específicas
+ALTER TABLE t1 ADD SEARCH OPTIMIZATION ON EQUALITY(c1), EQUALITY(c2);
+
+-- Deshabilitar
+ALTER TABLE t1 DROP SEARCH OPTIMIZATION;</code></pre>
+
+  <h4>Search Optimization vs Clustering Keys</h4>
+  <p>Clustering keys reorganizan datos físicamente para rangos amplios. Search Optimization crea un índice adicional para lookups puntuales. <b>Son complementarios</b>, no excluyentes.</p>
+
+  <div class="key-concepts">
+    <span>search access path</span>
+    <span>Enterprise Edition+</span>
+    <span>serverless</span>
+    <span>point lookup</span>
+    <span>EQUALITY / SUBSTRING / GEO</span>
+    <span>ADD SEARCH OPTIMIZATION</span>
+    <span>complementario a clustering</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>BigQuery</b>, el equivalente más cercano es el <b>Search Index</b> (CREATE SEARCH INDEX) para búsquedas de texto. En <b>Redshift</b>, no hay equivalente directo — se usan sort keys y zone maps. El search access path de Snowflake es más granular que los zone maps tradicionales.
+  </div>
+
+  <div class="exam-box">
+    <b>¿Search Optimization reemplaza a clustering keys?</b> → NO, son complementarios.<br>
+    <b>¿Qué edición requiere?</b> → Enterprise o superior.<br>
+    <b>¿Usa tu warehouse?</b> → NO, es serverless.<br>
+    <b>¿Funciona con datos semi-estructurados (VARIANT)?</b> → SÍ.
+  </div>
+</section>
+
+<!-- ==================== VIEWS ==================== -->
+<section id="views" class="section-views">
+  <h2>Vistas Estándar (Non-Materialized) <span class="domain-tag">Domain 1.5</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Una <b>vista</b> es una definición nombrada de un query. Los resultados se generan al momento de consultar la vista — no se almacenan. Permiten segregar, combinar y proteger datos. Se pueden usar en JOINs, subqueries, etc.</p>
+  <p>Si no se especifica el schema en el CREATE VIEW, Snowflake asume que la tabla referida está en el <b>mismo schema que la vista</b> (no el schema activo de la sesión). Esto es importante para portabilidad.</p>
+
+  <h4>Características</h4>
+  <p>No consumen storage adicional, no tienen costo de mantenimiento, no mejoran performance per se (se re-ejecuta el query cada vez), pero simplifican la lógica de queries y proporcionan seguridad a nivel de fila/columna.</p>
+
+  <div class="key-concepts">
+    <span>CREATE VIEW</span>
+    <span>no almacena datos</span>
+    <span>re-ejecuta query</span>
+    <span>segregación de datos</span>
+    <span>schema de la vista</span>
+  </div>
+</section>
+
+<!-- ==================== SECURE VIEWS ==================== -->
+<section id="secure-views" class="section-views">
+  <h2>Secure Views <span class="domain-tag">Domain 1.5 / 2.2</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Las <b>Secure Views</b> desactivan optimizaciones internas que podrían exponer datos ocultos y esconden la definición SQL de la vista. Dos propósitos: <b>privacidad de datos</b> y <b>protección de lógica de negocio</b>.</p>
+
+  <h4>Cuándo usar</h4>
+  <p>Para vistas que controlan acceso a datos sensibles. <b>Obligatorias para Secure Data Sharing</b>. NO se deben usar solo por conveniencia de queries — pueden ser más lentas por las optimizaciones deshabilitadas.</p>
+
+  <h4>Cómo se expone data en vistas no-seguras</h4>
+  <p>A través de user code que explota optimizaciones internas. Ejemplo: un query con una division-by-zero condicional podría revelar la existencia de datos filtrados.</p>
+
+  <pre><code>-- Crear secure view
+CREATE SECURE VIEW my_secure_view AS
+  SELECT col1, col2 FROM sensitive_table WHERE region = 'US';
+
+-- Convertir vista existente a secure
+ALTER VIEW my_view SET SECURE;
+
+-- Quitar secure
+ALTER VIEW my_view UNSET SECURE;</code></pre>
+
+  <div class="key-concepts">
+    <span>SECURE VIEW</span>
+    <span>definición oculta</span>
+    <span>optimizaciones deshabilitadas</span>
+    <span>data sharing obligatorio</span>
+    <span>SET SECURE / UNSET SECURE</span>
+  </div>
+
+  <div class="exam-box">
+    <b>¿Cuándo es obligatorio usar Secure Views?</b> → Al compartir datos via Secure Data Sharing.<br>
+    <b>¿Quién puede ver la definición de una Secure View?</b> → Solo el rol owner de la vista.<br>
+    <b>¿Las Secure Views son más rápidas que las normales?</b> → NO, pueden ser más lentas.
+  </div>
+</section>
+
+<!-- ==================== MATERIALIZED VIEWS ==================== -->
+<section id="mat-views" class="section-views">
+  <h2>Materialized Views <span class="domain-tag">Domain 4.2</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Una <b>Materialized View (MV)</b> almacena resultados pre-computados de un query. Más rápida que re-ejecutar el query. Mantenimiento automático y transparente por un servicio background de Snowflake. Los datos siempre están actualizados — si hay cambios, Snowflake combina MV cache con datos frescos del base table. Requiere <b>Enterprise Edition</b>.</p>
+
+  <h4>Cuándo crear</h4>
+  <p>Cuando los resultados cambian poco, se usan frecuentemente, el query es costoso, o la vista es sobre una external table. Las MVs soportan clustering keys.</p>
+
+  <h4>Limitaciones importantes</h4>
+  <p>Solo pueden definirse sobre <b>una sola tabla</b> (no JOINs). El mantenimiento automático consume credits (serverless). Usan storage adicional. No se soportan todas las funciones SQL.</p>
+
+  <table class="comparison-table">
+    <thead>
+      <tr><th>Feature</th><th>Regular View</th><th>Materialized View</th><th>Dynamic Table</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Performance benefit</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+      <tr><td>Almacena datos</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+      <tr><td>JOINs</td><td>Sí</td><td>No</td><td>Sí</td></tr>
+      <tr><td>Mantenimiento auto</td><td>N/A</td><td>Sí (serverless)</td><td>Sí (warehouse)</td></tr>
+      <tr><td>Clustering key</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+      <tr><td>Edición requerida</td><td>Standard</td><td>Enterprise+</td><td>Standard</td></tr>
+    </tbody>
+  </table>
+
+  <div class="key-concepts">
+    <span>pre-computed</span>
+    <span>Enterprise Edition+</span>
+    <span>auto-maintenance (serverless)</span>
+    <span>single table only</span>
+    <span>no JOINs</span>
+    <span>clustering key en MV</span>
+    <span>CREATE MATERIALIZED VIEW</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>BigQuery</b>, las <b>materialized views</b> también existen con auto-refresh y smart tuning automático. En <b>Redshift</b>, las materialized views requieren <code>REFRESH MATERIALIZED VIEW</code> manual o auto-refresh configurado. Snowflake las mantiene automáticamente sin intervención.
+  </div>
+
+  <div class="exam-box">
+    <b>¿Las Materialized Views permiten JOINs?</b> → NO, solo una tabla base.<br>
+    <b>¿Requieren warehouse para mantenimiento?</b> → NO, usan serverless compute.<br>
+    <b>¿Qué edición necesitan?</b> → Enterprise o superior.<br>
+    <b>¿Cuál es la diferencia clave entre MV y Dynamic Table?</b> → MV: single table, serverless, no JOINs. DT: multi-table, warehouse, soporta JOINs.
+  </div>
+</section>
+
+<!-- ==================== VIEWS COMPARISON ==================== -->
+<section id="views-compare" class="section-views">
+  <h2>Views vs Materialized Views vs Dynamic Tables <span class="domain-tag">Domain 1.5 / 4.2</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Snowflake ofrece tres mecanismos principales para transformar/presentar datos. La elección depende de si necesitas performance (MV, DT), seguridad (views, secure views), JOINs (views, DT), o pipelines ELT (DT).</p>
+
+  <p><b>Views</b>: definición de query, no almacenan nada, sin costo de storage/maintenance. <b>Materialized Views</b>: resultados pre-computados, single table, serverless maintenance, Enterprise+. <b>Dynamic Tables</b>: transformaciones declarativas sobre múltiples tablas, mantenidas por un warehouse que tú especificas, target lag configurable.</p>
+</section>
+
+<!-- ==================== TABLE DESIGN ==================== -->
+<section id="table-design" class="section-design">
+  <h2>Table Design Considerations <span class="domain-tag">Domain 1.5</span></h2>
+
+  <h3>Concepto</h3>
+  <p>Mejores prácticas para diseñar tablas en Snowflake, enfocadas en eficiencia de storage y query performance.</p>
+
+  <h4>Tipos de datos</h4>
+  <p>Usar <b>DATE/TIMESTAMP</b> en lugar de VARCHAR para fechas — más eficiente en storage y performance. Elegir la granularidad correcta (DATE vs TIMESTAMP_NTZ/LTZ/TZ).</p>
+
+  <h4>Constraints</h4>
+  <p>En <b>tablas estándar</b>, las constraints (PK, FK, UNIQUE) son <b>informational only</b> — NO se enforzan excepto NOT NULL. En <b>Hybrid Tables</b> SÍ se enforzan. Las constraints informacionales son útiles para el query optimizer y documentación.</p>
+
+  <h4>Otros tips</h4>
+  <p>Elegir el tipo de tabla correcto (permanent, transient, temporary) según la necesidad de data protection. Considerar el impacto de Time Travel y Fail-safe en costos de storage. Usar NUMBER con precisión y escala adecuada en lugar de tipos más amplios.</p>
+
+  <div class="key-concepts">
+    <span>DATE/TIMESTAMP vs VARCHAR</span>
+    <span>constraints informational</span>
+    <span>NOT NULL enforced</span>
+    <span>Hybrid = enforced constraints</span>
+  </div>
+
+  <div class="exam-box">
+    <b>¿Las PK/FK se enforzan en tablas estándar?</b> → NO, son informational. Solo NOT NULL se enforza.<br>
+    <b>¿Por qué usar DATE en lugar de VARCHAR?</b> → Mejor compression, mejor performance de queries, menos storage.
+  </div>
+</section>
+
+<!-- ==================== CLONING ==================== -->
+<section id="cloning" class="section-clone">
+  <h2>Cloning Considerations <span class="domain-tag">Domain 5.1</span></h2>
+
+  <h3>Concepto</h3>
+  <p>El <b>zero-copy cloning</b> de Snowflake crea una copia de metadatos que referencia las mismas micro-partitions subyacentes. <b>No se duplican datos</b> al momento del clon — solo se incurre en storage adicional cuando los datos divergen (DML en clon o fuente).</p>
+
+  <h4>Privilegios en clones</h4>
+  <p>Al clonar un <b>database o schema</b>, los privilegios de los objetos hijos se heredan. El clon del container (DB/schema) en sí <b>NO hereda</b> sus privilegios. Se puede usar COPY GRANTS en CREATE TABLE/VIEW CLONE para copiar privilegios.</p>
+
+  <h4>Consideraciones clave</h4>
+  <p>Clustering keys se copian pero <b>Automatic Clustering queda SUSPENDIDO</b>. Las secuencias default se referencian al clon si están en el mismo schema/db clonado, sino apuntan a la fuente. Los pipes clonados: el rol creador obtiene OWNERSHIP. Los clones de transient tables desde permanent tables comparten micro-partitions y pueden retrasar Fail-safe de la fuente.</p>
+
+  <pre><code>-- Clonar tabla
+CREATE TABLE t1_clone CLONE t1;
+
+-- Clonar con Time Travel (punto en el tiempo)
+CREATE TABLE t1_clone CLONE t1 AT(TIMESTAMP => '2024-01-01 00:00:00');
+
+-- Clonar database completo
+CREATE DATABASE db_clone CLONE my_db;</code></pre>
+
+  <div class="key-concepts">
+    <span>zero-copy clone</span>
+    <span>metadata-only</span>
+    <span>CLONE</span>
+    <span>COPY GRANTS</span>
+    <span>AC suspendido en clon</span>
+    <span>Time Travel clone (AT / BEFORE)</span>
+  </div>
+
+  <div class="cloud-box">
+    En <b>BigQuery</b>, el equivalente es <code>CREATE TABLE COPY</code> o table snapshots, pero siempre generan una copia lógica que eventualmente consume storage. En <b>Redshift</b>, no hay zero-copy clone nativo — necesitas UNLOAD/COPY o snapshots de cluster. La ventaja de Snowflake es que el clon es instantáneo y sin costo hasta divergencia.
+  </div>
+
+  <div class="exam-box">
+    <b>¿Un clone consume storage adicional inmediatamente?</b> → NO, solo cuando los datos cambian.<br>
+    <b>¿Los privilegios del database/schema se heredan al clonar?</b> → NO para el container, SÍ para los objetos hijos.<br>
+    <b>¿Se puede clonar usando Time Travel?</b> → SÍ, con AT o BEFORE.<br>
+    <b>¿Qué pasa con las clustering keys al clonar?</b> → Se copian pero AC queda suspendido.
+  </div>
+</section>
+
+<!-- ==================== DATA STORAGE ==================== -->
+<section id="storage" class="section-storage">
+  <h2>Data Storage & Continuous Data Protection <span class="domain-tag">Domain 5.1</span></h2>
+
+  <h3>Concepto</h3>
+  <p>El storage en Snowflake pasa por tres estados secuenciales del ciclo de vida CDP: <b>Active → Time Travel → Fail-safe</b>. Se cobra por los tres estados. Los datos se purgan solo después de completar Fail-safe (mínimo 8 días para standard, hasta 97 días con extended Time Travel en Enterprise+).</p>
+
+  <h4>Time Travel</h4>
+  <p>Permite acceder a datos históricos. Permanent tables: hasta 90 días (Enterprise+). Transient/Temporary: máximo 1 día. Se controla con <code>DATA_RETENTION_TIME_IN_DAYS</code>.</p>
+
+  <h4>Fail-safe</h4>
+  <p>7 días adicionales después de Time Travel para tablas permanentes. Solo accesible por Snowflake Support (no por el usuario). Transient y temporary tienen 0 días de Fail-safe.</p>
+
+  <h4>Monitoreo de storage</h4>
+  <p>ACCOUNTADMIN puede ver storage total en Snowsight (Admin → Cost Management). Para tablas individuales: <code>TABLE_STORAGE_METRICS</code> (Information Schema) con columnas ACTIVE_BYTES, TIME_TRAVEL_BYTES, FAILSAFE_BYTES.</p>
+
+  <h4>Staged files</h4>
+  <p>Archivos en internal stages no tienen Time Travel ni Fail-safe, pero sí costos de storage estándar. Se recomienda eliminarlos después de cargar datos con REMOVE o la opción PURGE en COPY INTO.</p>
+
+  <h4>Zero-copy cloning y storage</h4>
+  <p>Las tablas clonadas comparten micro-partitions con la fuente. Storage adicional se incurre solo con cambios (DML). TABLE_STORAGE_METRICS distingue entre <b>owned storage</b> y <b>referenced storage</b>.</p>
+
+  <div class="key-concepts">
+    <span>Active → Time Travel → Fail-safe</span>
+    <span>DATA_RETENTION_TIME_IN_DAYS</span>
+    <span>TABLE_STORAGE_METRICS</span>
+    <span>ACTIVE_BYTES</span>
+    <span>TIME_TRAVEL_BYTES</span>
+    <span>FAILSAFE_BYTES</span>
+    <span>PURGE / REMOVE</span>
+  </div>
+
+  <div class="exam-box">
+    <b>¿Cuántos días de Fail-safe tienen las tablas permanentes?</b> → 7 días.<br>
+    <b>¿Quién puede acceder a datos en Fail-safe?</b> → Solo Snowflake Support.<br>
+    <b>¿Los staged files tienen Fail-safe?</b> → NO.<br>
+    <b>¿Cómo se monitorean costos de storage por tabla?</b> → TABLE_STORAGE_METRICS view.
+  </div>
+</section>
+
+<!-- ==================== TRAMPAS ==================== -->
+<section id="traps">
+  <h2>🪤 Trampas y Confusiones Frecuentes del Examen</h2>
+
+  <div class="trap-box">
+    <b>Clustering keys en Hybrid Tables</b> — Las Hybrid Tables NO soportan clustering keys. Los datos se ordenan por primary key. Si te preguntan sobre clustering y Hybrid Tables juntos, la respuesta es que no es compatible.
+  </div>
+
+  <div class="trap-box">
+    <b>Constraints enforced vs informational</b> — En tablas estándar, PK/FK/UNIQUE son INFORMATIONAL (no se enforzan). En Hybrid Tables SÍ se enforzan. NOT NULL se enforza en ambos tipos. Pregunta típica: "¿Qué tipo de constraint se enforza en standard tables?" → Solo NOT NULL.
+  </div>
+
+  <div class="trap-box">
+    <b>Fail-safe en Transient vs Temporary</b> — Ambas tienen 0 días de Fail-safe. La diferencia es la persistencia: temporary = solo sesión, transient = hasta DROP explícito.
+  </div>
+
+  <div class="trap-box">
+    <b>Automatic Clustering al clonar</b> — Siempre queda SUSPENDIDO en el clon, sin importar el estado en la fuente. Cambiar el clustering key también resume AC automáticamente (y puede generar costos).
+  </div>
+
+  <div class="trap-box">
+    <b>Materialized Views vs Dynamic Tables</b> — MV: single table, no JOINs, serverless, Enterprise+. DT: multi-table, JOINs, usa warehouse, Standard edition. No confundir cuál soporta JOINs.
+  </div>
+
+  <div class="trap-box">
+    <b>Search Optimization vs Clustering</b> — NO son lo mismo. Clustering organiza datos físicamente. Search Optimization crea un índice adicional (search access path). Son complementarios. Ambos usan serverless compute.
+  </div>
+
+  <div class="trap-box">
+    <b>External Tables y DML</b> — Son read-only. No se puede hacer INSERT, UPDATE, DELETE. Si necesitas escribir, debes hacer COPY INTO una tabla interna.
+  </div>
+
+  <div class="trap-box">
+    <b>Secure Views y performance</b> — Las Secure Views pueden ser MÁS LENTAS porque desactivan optimizaciones del query optimizer. No usarlas solo por conveniencia.
+  </div>
+
+  <div class="trap-box">
+    <b>DROP COLUMN y storage</b> — Hacer DROP COLUMN NO reescribe las micro-partitions. Los datos de la columna eliminada permanecen en storage hasta que se purguen naturalmente.
+  </div>
+
+  <div class="trap-box">
+    <b>Resource Monitors y servicios serverless</b> — Los Resource Monitors NO controlan el consumo de Automatic Clustering, Search Optimization ni Materialized View maintenance. Solo controlan warehouses de usuario.
+  </div>
+
+  <div class="trap-box">
+    <b>Temporary table con mismo nombre</b> — Si creas una temporary table con el mismo nombre que una permanent en el mismo schema, la temporary toma precedencia en la sesión. La permanent queda "oculta". Cuidado con DDL como DROP TABLE en este escenario.
+  </div>
+
+  <div class="trap-box">
+    <b>VARCHAR en clustering keys</b> — Solo se usan los primeros 5 bytes. Si los primeros caracteres son iguales para todas las filas, usar SUBSTRING para empezar después de los caracteres comunes.
+  </div>
+</section>
+
+<div style="text-align:center; padding:40px 0 20px; color:var(--text-muted); font-size:0.78rem;">
+  Generado a partir de la documentación oficial de Snowflake • SnowPro Core COF-C03 Study Guide (Jan 2026)<br>
+  Solo para uso de estudio personal
+</div>
+
+</main>
+
+<script>
+// Sidebar active link tracking
+const sections = document.querySelectorAll('section[id], div[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    const top = s.offsetTop - 100;
+    if (pageYOffset >= top) current = s.getAttribute('id');
+  });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+});
+
+// Close mobile menu on link click
+navLinks.forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>

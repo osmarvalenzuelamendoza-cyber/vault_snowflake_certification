@@ -1,0 +1,9 @@
+- Overview: https://docs.snowflake.com/en/user-guide/warehouses-overview
+- Multi-Cluster: https://docs.snowflake.com/en/user-guide/warehouses-multicluster
+- Considerations: https://docs.snowflake.com/en/user-guide/warehouses-considerations
+- Working with warehouses: https://docs.snowflake.com/en/user-guide/warehouses-tasks
+- Next-generation standard warehouses: https://docs.snowflake.com/en/user-guide/warehouses-gen2
+- Query Acceleration Service: https://docs.snowflake.com/en/user-guide/query-acceleration-service
+- Monitoring load: https://docs.snowflake.com/en/user-guide/warehouses-load-monitoring
+- Snowpark-optimized warehouses: https://docs.snowflake.com/en/user-guide/warehouses-snowpark-optimized
+- Interactive tables and warehouses: https://docs.snowflake.com/en/user-guide/interactive

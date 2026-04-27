@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnowPro Core COF-C03 — Virtual Warehouses</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #232733;
+  --border: #2e3345;
+  --text: #e2e4eb;
+  --text-muted: #8b8fa3;
+  --accent: #29b6f6;
+  --accent-dim: rgba(41,182,246,0.12);
+  --green: #66bb6a;
+  --green-dim: rgba(102,187,106,0.12);
+  --orange: #ffa726;
+  --orange-dim: rgba(255,167,38,0.12);
+  --red: #ef5350;
+  --red-dim: rgba(239,83,80,0.12);
+  --purple: #ab47bc;
+  --purple-dim: rgba(171,71,188,0.12);
+  --yellow: #ffee58;
+  --yellow-dim: rgba(255,238,88,0.12);
+  --cyan: #26c6da;
+  --sidebar-w: 280px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* SIDEBAR */
+.sidebar {
+  position:fixed; top:0; left:0; width:var(--sidebar-w); height:100vh;
+  background:var(--surface); border-right:1px solid var(--border);
+  overflow-y:auto; z-index:100; padding:24px 0;
+}
+.sidebar h2 {
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:700;
+  color:var(--accent); text-transform:uppercase; letter-spacing:2px;
+  padding:0 20px 16px; border-bottom:1px solid var(--border);
+}
+.sidebar .logo { padding:0 20px 8px; font-family:'Outfit'; font-size:11px; color:var(--text-muted); }
+.sidebar nav { padding:12px 0; }
+.sidebar nav a {
+  display:block; padding:8px 20px; font-size:13px; color:var(--text-muted);
+  border-left:3px solid transparent; transition:all .2s;
+}
+.sidebar nav a:hover, .sidebar nav a.active {
+  color:var(--text); background:var(--accent-dim); border-left-color:var(--accent);
+  text-decoration:none;
+}
+.sidebar nav .sub { padding-left:36px; font-size:12px; }
+
+/* MAIN */
+.main { margin-left:var(--sidebar-w); padding:40px 48px 80px; max-width:960px; }
+
+h1 {
+  font-family:'Outfit',sans-serif; font-size:36px; font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+.subtitle { color:var(--text-muted); font-size:15px; margin-bottom:40px; }
+
+h2 {
+  font-family:'Outfit',sans-serif; font-size:24px; font-weight:700;
+  color:var(--text); margin:48px 0 16px; padding-bottom:8px;
+  border-bottom:2px solid var(--border);
+}
+h3 {
+  font-family:'Outfit',sans-serif; font-size:18px; font-weight:600;
+  color:var(--accent); margin:28px 0 12px;
+}
+h4 { font-size:15px; font-weight:600; color:var(--orange); margin:20px 0 8px; }
+
+p { margin-bottom:14px; font-size:14.5px; }
+ul, ol { margin:0 0 16px 24px; font-size:14.5px; }
+li { margin-bottom:6px; }
+strong { color:#fff; }
+code {
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+  background:var(--surface2); padding:2px 6px; border-radius:4px; color:var(--cyan);
+}
+pre {
+  background:var(--surface); border:1px solid var(--border); border-radius:8px;
+  padding:16px 20px; overflow-x:auto; margin:12px 0 20px;
+  font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.6;
+  color:var(--text);
+}
+
+/* CARDS */
+.card {
+  border-radius:10px; padding:20px 24px; margin:16px 0;
+  border-left:4px solid;
+}
+.card-concept { background:var(--accent-dim); border-color:var(--accent); }
+.card-exam { background:var(--orange-dim); border-color:var(--orange); }
+.card-aws { background:var(--purple-dim); border-color:var(--purple); }
+.card-trap { background:var(--red-dim); border-color:var(--red); }
+.card-tip { background:var(--green-dim); border-color:var(--green); }
+.card-key { background:var(--yellow-dim); border-color:var(--yellow); }
+
+.card-title {
+  font-family:'Outfit'; font-weight:700; font-size:13px;
+  text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px;
+}
+.card-concept .card-title { color:var(--accent); }
+.card-exam .card-title { color:var(--orange); }
+.card-aws .card-title { color:var(--purple); }
+.card-trap .card-title { color:var(--red); }
+.card-tip .card-title { color:var(--green); }
+.card-key .card-title { color:var(--yellow); }
+
+.card p, .card li { font-size:13.5px; }
+
+/* TOP 10 */
+.top10 {
+  background:linear-gradient(135deg, rgba(41,182,246,0.08), rgba(38,198,218,0.08));
+  border:1px solid var(--accent); border-radius:12px;
+  padding:24px 28px; margin:24px 0 40px;
+}
+.top10 h3 { color:var(--cyan); margin-top:0; }
+.top10 ol { counter-reset:top; list-style:none; margin-left:0; }
+.top10 ol li {
+  counter-increment:top; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:14px;
+}
+.top10 ol li::before {
+  content:counter(top); display:inline-block; width:28px; height:28px;
+  background:var(--accent); color:var(--bg); border-radius:50%;
+  text-align:center; line-height:28px; font-weight:700; font-size:13px;
+  margin-right:12px;
+}
+
+/* TABLE */
+table {
+  width:100%; border-collapse:collapse; margin:12px 0 20px;
+  font-size:13.5px;
+}
+th {
+  background:var(--surface2); color:var(--accent); font-weight:600;
+  text-align:left; padding:10px 14px; border:1px solid var(--border);
+}
+td {
+  padding:10px 14px; border:1px solid var(--border);
+  background:var(--surface);
+}
+tr:hover td { background:var(--surface2); }
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; padding:24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo">SnowPro Core COF-C03</div>
+  <h2>Virtual Warehouses</h2>
+  <nav>
+    <a href="#top10">Top 10 Conceptos</a>
+    <a href="#s1">1. Arquitectura y Tipos</a>
+    <a class="sub" href="#s1a">Standard Gen1 vs Gen2</a>
+    <a class="sub" href="#s1b">Snowpark-Optimized</a>
+    <a class="sub" href="#s1c">Interactive (ref.)</a>
+    <a href="#s2">2. Tamaño y Créditos</a>
+    <a class="sub" href="#s2a">Tabla de Tamaños</a>
+    <a class="sub" href="#s2b">Billing per-second</a>
+    <a href="#s3">3. Scaling Up vs Out</a>
+    <a class="sub" href="#s3a">Resize (Up/Down)</a>
+    <a class="sub" href="#s3b">Multi-cluster (In/Out)</a>
+    <a href="#s4">4. Multi-cluster Warehouses</a>
+    <a class="sub" href="#s4a">Maximized vs Auto-scale</a>
+    <a class="sub" href="#s4b">Scaling Policies</a>
+    <a class="sub" href="#s4c">Créditos Multi-cluster</a>
+    <a href="#s5">5. Auto-Suspend / Resume</a>
+    <a href="#s6">6. QAS</a>
+    <a href="#s7">7. Warehouse Cache</a>
+    <a href="#s8">8. Monitoreo de Carga</a>
+    <a href="#s9">9. Best Practices por Caso</a>
+    <a href="#traps">Trampas del Examen</a>
+  </nav>
+</div>
+
+<div class="main">
+<h1>Virtual Warehouses</h1>
+<p class="subtitle">Dominio 1.4 · Peso: parte del 31% del examen · Fuente: documentación oficial Snowflake</p>
+
+<!-- ============ TOP 10 ============ -->
+<div class="top10" id="top10">
+<h3>Top 10 Conceptos Clave para el Examen</h3>
+<ol>
+  <li><strong>Scale Up</strong> (resize) mejora performance de queries complejos; <strong>Scale Out</strong> (multi-cluster) mejora concurrencia.</li>
+  <li>Los créditos se duplican con cada tamaño superior — billing es <strong>per-second con mínimo de 60 segundos</strong>.</li>
+  <li>Multi-cluster Warehouses son feature de <strong>Enterprise Edition</strong> o superior.</li>
+  <li>Dos modos multi-cluster: <strong>Maximized</strong> (min = max) y <strong>Auto-scale</strong> (min &lt; max).</li>
+  <li>Dos Scaling Policies: <strong>Standard</strong> (prioriza performance, inicia clusters rápido) y <strong>Economy</strong> (prioriza costo, espera 6 min de carga).</li>
+  <li><strong>Snowpark-Optimized</strong> = más memoria por nodo (16x default), ideal para ML training con Snowpark.</li>
+  <li><strong>Gen2 Standard</strong> = hardware más nuevo, mejor performance para analytics; se configura con <code>RESOURCE_CONSTRAINT = STANDARD_GEN_2</code>.</li>
+  <li><strong>Query Acceleration Service (QAS)</strong> = recurso serverless que acelera outlier queries con scans grandes; Enterprise Edition, scale factor default = 8.</li>
+  <li>El <strong>warehouse cache</strong> se pierde al suspender — tradeoff entre ahorro de créditos vs warm cache.</li>
+  <li>Aumentar el tamaño del warehouse <strong>NO mejora necesariamente</strong> la carga de datos — depende más del número y tamaño de archivos.</li>
+</ol>
+</div>
+
+<!-- ============ SECTION 1 ============ -->
+<h2 id="s1">1. Tipos de Warehouses</h2>
+<p>Snowflake ofrece distintos tipos de virtual warehouses, cada uno optimizado para diferentes cargas de trabajo. El examen evalúa que conozcas cuándo usar cada tipo.</p>
+
+<h3 id="s1a">Standard Warehouses: Gen1 vs Gen2</h3>
+<p>Existen dos generaciones de warehouses estándar. Gen1 es el original; Gen2 es la versión de próxima generación con hardware más rápido y optimizaciones de software para operaciones como DELETE, UPDATE, MERGE y scans de tablas.</p>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p>La generación se controla con la propiedad <code>RESOURCE_CONSTRAINT</code> que acepta los valores <code>STANDARD_GEN_1</code> o <code>STANDARD_GEN_2</code>. Este parámetro solo se configura vía SQL, no está disponible en Snowsight. Gen2 <strong>no está disponible</strong> para tamaños 5XL y 6XL.</p>
+</div>
+
+<div class="card card-key">
+  <div class="card-title">Palabras clave</div>
+  <p><code>RESOURCE_CONSTRAINT</code> · <code>STANDARD_GEN_1</code> · <code>STANDARD_GEN_2</code> · <code>WAREHOUSE_TYPE = 'STANDARD'</code></p>
+</div>
+
+<div class="card card-aws">
+  <div class="card-title">Analogía GCP / AWS</div>
+  <p>Es comparable a elegir entre generaciones de instancias en AWS (ej: m5 → m6i → m7i) o en GCP (N2 → N2D → C3). Hardware más nuevo, mejor relación precio/performance, misma API. En Snowflake simplemente se cambia el RESOURCE_CONSTRAINT sin gestionar infraestructura.</p>
+</div>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>¿Cómo se convierte un warehouse Gen1 a Gen2? → <code>ALTER WAREHOUSE SET RESOURCE_CONSTRAINT = STANDARD_GEN_2</code>. ¿Se puede hacer con el warehouse corriendo? → Sí, pero las queries existentes terminan en Gen1 y las nuevas usan Gen2 (se cobra por ambos recursos mientras tanto).</p>
+</div>
+
+<h3 id="s1b">Snowpark-Optimized Warehouses</h3>
+<p>Proporcionan <strong>más memoria por nodo</strong> que un warehouse estándar. El default es 16x más memoria (MEMORY_16X). Están diseñados para cargas de trabajo que usan Snowpark: ML training con stored procedures en Python/Java, UDFs y UDTFs con alto consumo de memoria.</p>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p>Se crean con <code>WAREHOUSE_TYPE = 'SNOWPARK-OPTIMIZED'</code>. El parámetro <code>RESOURCE_CONSTRAINT</code> controla la cantidad de memoria: <code>MEMORY_1X</code> (16GB), <code>MEMORY_16X</code> (256GB, default), <code>MEMORY_64X</code> (1TB, preview solo AWS). Variantes con sufijo <code>_x86</code> fuerzan arquitectura x86. Su creación y reanudación pueden tardar más que un warehouse estándar.</p>
+</div>
+
+<div class="card card-aws">
+  <div class="card-title">Analogía GCP / AWS</div>
+  <p>Similar a elegir instancias memory-optimized en AWS (familia r6i/r7i) o GCP (familia M3) versus instancias de propósito general. El concepto es el mismo: más RAM por nodo para workloads que lo requieren, a mayor costo por crédito.</p>
+</div>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>Un equipo necesita ejecutar un modelo de ML training con Snowpark Python que consume mucha memoria. ¿Qué tipo de warehouse deben usar? → <strong>Snowpark-Optimized</strong>. ¿Los workloads que NO usan Snowpark se benefician? → No necesariamente.</p>
+</div>
+
+<h3 id="s1c">Interactive Warehouses (Referencia)</h3>
+<p>Son un tipo nuevo, GA solo en algunas regiones AWS. Optimizados para queries de baja latencia y alta concurrencia con Interactive Tables. Dado que el examen no suele evaluar features que no son GA global, conoce su existencia pero no es prioritario para el estudio.</p>
+
+<!-- ============ SECTION 2 ============ -->
+<h2 id="s2">2. Tamaño del Warehouse y Créditos</h2>
+
+<h3 id="s2a">Tabla de Tamaños y Créditos (Gen1)</h3>
+<p>Cada tamaño duplica la capacidad de cómputo y los créditos por hora respecto al anterior. El tamaño default al crear un warehouse es <strong>X-Small</strong>.</p>
+
+<table>
+  <tr><th>Tamaño</th><th>Créditos/hora</th><th>Créditos/seg</th></tr>
+  <tr><td>X-Small</td><td>1</td><td>0.0003</td></tr>
+  <tr><td>Small</td><td>2</td><td>0.0006</td></tr>
+  <tr><td>Medium</td><td>4</td><td>0.0011</td></tr>
+  <tr><td>Large</td><td>8</td><td>0.0022</td></tr>
+  <tr><td>X-Large</td><td>16</td><td>0.0044</td></tr>
+  <tr><td>2X-Large</td><td>32</td><td>0.0089</td></tr>
+  <tr><td>3X-Large</td><td>64</td><td>0.0178</td></tr>
+  <tr><td>4X-Large</td><td>128</td><td>0.0356</td></tr>
+  <tr><td>5X-Large</td><td>256</td><td>0.0711</td></tr>
+  <tr><td>6X-Large</td><td>512</td><td>0.1422</td></tr>
+</table>
+
+<h3 id="s2b">Modelo de Billing Per-Second</h3>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p>Snowflake cobra <strong>por segundo</strong> con un <strong>mínimo de 60 segundos</strong> cada vez que el warehouse se inicia/reanuda. Después de esos 60 segundos, cada segundo adicional se cobra de forma proporcional. Si un warehouse corre 61 segundos, se cobran exactamente 61 segundos. Si corre 30 segundos, se cobran 60. Si se suspende y reinicia, el mínimo de 60 segundos aplica nuevamente.</p>
+</div>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>Un warehouse corre por 61 segundos, se suspende, y luego corre otros 45 segundos. ¿Cuántos segundos se cobran? → 60 + 1 + 60 = <strong>121 segundos</strong> (el segundo inicio tiene su propio mínimo de 60s).</p>
+</div>
+
+<div class="card card-tip">
+  <div class="card-title">Tip para el examen</div>
+  <p>Recuerda: <strong>aumentar el tamaño del warehouse NO mejora necesariamente la carga de datos</strong>. La performance de data loading depende más del número y tamaño de archivos. Un warehouse Small o Medium suele ser suficiente a menos que cargues cientos o miles de archivos en paralelo.</p>
+</div>
+
+<!-- ============ SECTION 3 ============ -->
+<h2 id="s3">3. Scale Up vs Scale Out</h2>
+
+<h3 id="s3a">Scale Up (Resize / Sizing Up-Down)</h3>
+<p>Resize significa cambiar el tamaño del warehouse (ej: Medium → Large). Esto le da <strong>más recursos de cómputo a cada query individual</strong>. Es la estrategia para mejorar la <strong>performance</strong> de queries complejos y lentos.</p>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p>Se puede hacer con el warehouse corriendo. Los recursos nuevos <strong>NO impactan queries en ejecución</strong>; solo benefician a queries en cola y nuevos. Al reducir el tamaño (scale down), los recursos removidos <strong>pierden su cache</strong>, lo que puede afectar temporalmente la performance (igual que suspender).</p>
+</div>
+
+<h3 id="s3b">Scale Out (Multi-cluster / Scaling In-Out)</h3>
+<p>Scale out significa agregar <strong>más clusters al warehouse</strong> (multi-cluster). Cada cluster tiene el mismo tamaño. Esto mejora la <strong>concurrencia</strong> — permite atender más usuarios/queries simultáneos sin que se encolen.</p>
+
+<div class="card card-key">
+  <div class="card-title">Regla de oro para el examen</div>
+  <p><strong>Scale Up</strong> → para queries lentos/complejos (mejora performance individual).<br>
+  <strong>Scale Out</strong> → para muchos usuarios concurrentes (mejora concurrencia).<br>
+  Multi-cluster <strong>NO mejora</strong> queries lentos individuales ni la carga de datos.</p>
+</div>
+
+<div class="card card-aws">
+  <div class="card-title">Analogía GCP / AWS</div>
+  <p><strong>Scale Up</strong> = cambiar el tipo de instancia de EC2/GCE a uno más grande (vertical scaling).<br>
+  <strong>Scale Out</strong> = agregar más instancias detrás de un Load Balancer / Auto Scaling Group (horizontal scaling). En Snowflake, el multi-cluster warehouse es el "auto scaling group" nativo.</p>
+</div>
+
+<!-- ============ SECTION 4 ============ -->
+<h2 id="s4">4. Multi-cluster Warehouses (Enterprise Edition)</h2>
+
+<h3 id="s4a">Modos: Maximized vs Auto-scale</h3>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p><strong>Maximized:</strong> MIN_CLUSTER_COUNT = MAX_CLUSTER_COUNT (ambos > 1). Todos los clusters arrancan al iniciar el warehouse. Útil cuando la carga es predecible y alta constantemente.</p>
+  <p><strong>Auto-scale:</strong> MIN_CLUSTER_COUNT &lt; MAX_CLUSTER_COUNT. Snowflake agrega y remueve clusters dinámicamente según la carga. Snowflake recomienda empezar con max=2 o 3, min=1 e ir ajustando.</p>
+</div>
+
+<p>El límite máximo de clusters depende del tamaño del warehouse. Para tamaños XS a Medium es 300, pero para 4XL-6XL es solo 10. En Snowsight el máximo configurable es 10; para más de 10 se usa SQL.</p>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>¿En qué modo un multi-cluster warehouse inicia todos los clusters al arrancar? → <strong>Maximized</strong> (min = max). ¿Cuál escala automáticamente según demanda? → <strong>Auto-scale</strong> (min < max). ¿Qué edición se requiere? → <strong>Enterprise Edition o superior</strong>.</p>
+</div>
+
+<h3 id="s4b">Scaling Policies (Standard vs Economy)</h3>
+<p>Solo aplican en modo <strong>Auto-scale</strong>. Controlan cuándo Snowflake agrega o remueve clusters.</p>
+
+<table>
+  <tr><th>Policy</th><th>Cuándo inicia un cluster nuevo</th><th>Cuándo apaga un cluster idle</th><th>Prioriza</th></tr>
+  <tr>
+    <td><strong>Standard</strong> (default)</td>
+    <td>Cuando una query se encola o Snowflake estima que no hay recursos suficientes para queries adicionales</td>
+    <td>Después de un período sostenido de baja carga, cuando las queries en el cluster terminan</td>
+    <td>Performance / Throughput</td>
+  </tr>
+  <tr>
+    <td><strong>Economy</strong></td>
+    <td>Solo si estima que hay suficiente carga para mantener el cluster ocupado al menos <strong>6 minutos</strong></td>
+    <td>Cuando estima que al cluster le quedan menos de <strong>6 minutos</strong> de trabajo</td>
+    <td>Costo / Ahorro de créditos</td>
+  </tr>
+</table>
+
+<div class="card card-key">
+  <div class="card-title">Palabra clave para el examen</div>
+  <p>El número mágico de Economy es <strong>6 minutos</strong>. Si te preguntan por una policy que prioriza ahorro de créditos y puede generar que queries se encolen más → Economy. Si preguntan por minimizar queuing → Standard.</p>
+</div>
+
+<h3 id="s4c">Cálculo de Créditos en Multi-cluster</h3>
+<p>Los créditos se calculan multiplicando: <strong>créditos del tamaño × número de clusters corriendo × tiempo</strong>. Si un warehouse Medium (4 cr/h) corre 3 clusters por 1 hora = 12 créditos. Si en modo Auto-scale solo 1 cluster corre la primera hora y 3 la segunda, el costo total varía por hora.</p>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>Un 3X-Large multi-cluster warehouse corre 1 cluster por 1 hora, luego 2 clusters por 1 hora. ¿Total de créditos? → 64 + 128 = <strong>192 créditos</strong>. El examen puede presentar escenarios de cálculo similares.</p>
+</div>
+
+<!-- ============ SECTION 5 ============ -->
+<h2 id="s5">5. Auto-Suspend y Auto-Resume</h2>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p><strong>Auto-Suspend:</strong> Suspende el warehouse tras un período de inactividad configurable. Snowflake recomienda valores bajos (5-10 min o menos) para ahorrar créditos, pero debe coincidir con los patrones de uso. Si hay gaps de 2-3 min entre queries, no pongas auto-suspend en 1 min porque el warehouse estará en ciclo constante de suspend/resume (cada resume = 60s mínimo de billing).</p>
+  <p><strong>Auto-Resume:</strong> Reanuda automáticamente el warehouse cuando llega un query. Habilitado por defecto. Al desactivarlo, se controla manualmente cuándo corre el warehouse (control de costos).</p>
+</div>
+
+<p>Para multi-cluster: Auto-suspend aplica solo cuando el <strong>número mínimo de clusters</strong> está corriendo y no hay actividad. Auto-resume aplica solo cuando el warehouse completo está suspendido (ningún cluster corriendo).</p>
+
+<div class="card card-tip">
+  <div class="card-title">Tip de configuración</div>
+  <p>Para desactivar auto-suspend vía SQL se usa <code>AUTO_SUSPEND = 0</code> o <code>NULL</code>. Pero cuidado: un warehouse corriendo 24/7 en XL genera 16 × 24 = 384 créditos/día.</p>
+</div>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>¿Cuál es el riesgo de poner auto-suspend en 1 minuto cuando hay gaps de 2-3 min entre queries? → Ciclo constante de suspend/resume, cada resume tiene mínimo 60s de billing, lo que puede ser <strong>más costoso</strong> que dejar el warehouse corriendo.</p>
+</div>
+
+<!-- ============ SECTION 6 ============ -->
+<h2 id="s6">6. Query Acceleration Service (QAS)</h2>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p>QAS es un servicio <strong>serverless</strong> que acelera partes de queries que consumen muchos recursos ("outlier queries") offloading trabajo a recursos compartidos de cómputo. Requiere <strong>Enterprise Edition</strong>. Se habilita por warehouse con <code>ENABLE_QUERY_ACCELERATION = TRUE</code>.</p>
+  <p>Beneficia especialmente a: analytics ad-hoc, queries con scans grandes y filtros selectivos, workloads con volumen impredecible por query. Los comandos que puede acelerar son: <strong>SELECT, INSERT, CTAS, COPY INTO &lt;table&gt;</strong>.</p>
+</div>
+
+<h4>Scale Factor</h4>
+<p>El <strong>scale factor</strong> es un mecanismo de control de costos que limita cuántos recursos adicionales puede usar QAS. Funciona como multiplicador del tamaño del warehouse. Default = <strong>8</strong>. Si se pone en 0, no hay límite. Ejemplo: un warehouse Medium (4 cr/h) con scale factor 5 puede consumir hasta 20 créditos adicionales por hora en QAS.</p>
+
+<div class="card card-key">
+  <div class="card-title">Palabras clave</div>
+  <p><code>ENABLE_QUERY_ACCELERATION</code> · <code>QUERY_ACCELERATION_MAX_SCALE_FACTOR</code> · <code>SYSTEM$ESTIMATE_QUERY_ACCELERATION()</code> · <code>QUERY_ACCELERATION_ELIGIBLE</code> (vista en ACCOUNT_USAGE)</p>
+</div>
+
+<h4>Razones de inelegibilidad para QAS</h4>
+<p>No todas las queries son elegibles. Razones comunes: no hay suficientes particiones para escanear, los filtros no son lo bastante selectivos, la cardinalidad del GROUP BY es demasiado alta, o la query usa funciones no determinísticas como SEQ o RANDOM.</p>
+
+<div class="card card-aws">
+  <div class="card-title">Analogía GCP / AWS</div>
+  <p>No hay un equivalente directo en GCP o AWS. Lo más cercano sería el concepto de "burst capacity" o "serverless compute pooling" — recursos compartidos que se asignan temporalmente para acelerar queries pesados sin tener que redimensionar tu instancia permanente. En Redshift, lo más cercano es "Concurrency Scaling", pero QAS trabaja a nivel de query individual, no de concurrencia.</p>
+</div>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>¿Qué servicio de Snowflake acelera outlier queries offloading a recursos serverless? → <strong>Query Acceleration Service</strong>. ¿Cuál es el scale factor default? → <strong>8</strong>. ¿Qué edición requiere? → <strong>Enterprise</strong>. ¿QAS puede trabajar junto con Search Optimization Service? → <strong>Sí</strong>, primero SOS pruna particiones, luego QAS acelera el scan restante.</p>
+</div>
+
+<!-- ============ SECTION 7 ============ -->
+<h2 id="s7">7. Warehouse Cache</h2>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p>Cada warehouse mantiene un <strong>cache de datos de tabla</strong> mientras está corriendo. A mayor tamaño del warehouse, mayor cache. El cache mejora performance de queries subsecuentes que acceden a los mismos datos. El cache se <strong>pierde completamente al suspender</strong> el warehouse. Al reanudar, las primeras queries pueden ser más lentas hasta que el cache se reconstruya.</p>
+</div>
+
+<div class="card card-key">
+  <div class="card-title">Tradeoff clave</div>
+  <p>Suspender = ahorra créditos pero pierde cache. Dejar corriendo = mantiene cache caliente pero consume créditos. También al hacer <strong>scale down</strong> (reducir tamaño) se pierde el cache de los recursos removidos.</p>
+</div>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>¿Qué sucede con el cache del warehouse cuando se suspende? → Se pierde. ¿Y cuando se reduce el tamaño? → El cache de los recursos removidos también se pierde. Este es el "warehouse cache" — no confundir con "query result cache" (que vive en la capa de Cloud Services) ni con "metadata cache".</p>
+</div>
+
+<!-- ============ SECTION 8 ============ -->
+<h2 id="s8">8. Monitoreo de Carga del Warehouse</h2>
+
+<div class="card card-concept">
+  <div class="card-title">Concepto técnico</div>
+  <p>Snowsight ofrece un gráfico de <strong>Warehouse Activity</strong> que muestra el query load (carga promedio de queries) en intervalos configurables de hasta 2 semanas. El query load se calcula como: <strong>suma del tiempo de ejecución de todas las queries en el intervalo ÷ duración total del intervalo</strong>.</p>
+  <p>Los estados visibles en el gráfico son: <strong>Running</strong>, <strong>Queued</strong> (por sobrecarga), <strong>Queued (Provisioning)</strong> (esperando recursos al reanudar), y <strong>Blocked</strong> (por locks de transacciones).</p>
+</div>
+
+<p>Para ver el gráfico se necesita el privilegio <strong>MONITOR</strong> en el warehouse. También se puede usar la vista <code>SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY</code> para análisis más detallados de performance.</p>
+
+<div class="card card-exam">
+  <div class="card-title">Posible pregunta de examen</div>
+  <p>Un administrador nota que queries están lentos. El gráfico de carga muestra alto queuing. ¿Qué debe hacer? → Si hay queuing por sobrecarga: agregar multi-cluster o crear un warehouse separado. Si la carga running es baja pero el query es lento: resize (scale up) el warehouse.</p>
+</div>
+
+<!-- ============ SECTION 9 ============ -->
+<h2 id="s9">9. Best Practices por Caso de Uso</h2>
+
+<h3>Ad-hoc Queries</h3>
+<p>Usar warehouses de tamaño apropiado a la complejidad de los queries. Agrupar workloads similares en el mismo warehouse. Para queries impredecibles, considerar habilitar QAS. Configurar auto-suspend bajo (5-10 min).</p>
+
+<h3>Data Loading</h3>
+<p>Un warehouse Small-Large suele ser suficiente a menos que se carguen cientos de archivos en paralelo. Usar un warehouse <strong>dedicado</strong> para carga (separado de queries) es una best practice. El tamaño del warehouse tiene menos impacto en performance de carga que el número y tamaño de archivos.</p>
+
+<h3>BI y Reporting</h3>
+<p>Cargas predecibles y concurrentes → candidato ideal para multi-cluster en modo <strong>Auto-scale con policy Standard</strong>. Si el patrón es estable, considerar Maximized. Separar warehouses por equipo o por tipo de workload para poder monitorear y optimizar independientemente.</p>
+
+<h3>Diferentes Equipos / Alta Concurrencia / Queries Complejos</h3>
+<div class="card card-tip">
+  <div class="card-title">Best practices según el temario</div>
+  <p><strong>Diferentes equipos:</strong> usar warehouses separados por equipo/dominio para aislar costos y performance.<br>
+  <strong>Alta concurrencia:</strong> multi-cluster Auto-scale o crear warehouses adicionales.<br>
+  <strong>Queries complejos:</strong> scale up (warehouse más grande), habilitar QAS si los queries tienen scans grandes.</p>
+</div>
+
+<!-- ============ TRAMPAS ============ -->
+<h2 id="traps">Trampas y Confusiones Frecuentes del Examen</h2>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #1 — Resize vs Multi-cluster</div>
+  <p>Resize (scale up) mejora <strong>performance de queries individuales</strong>. Multi-cluster (scale out) mejora <strong>concurrencia</strong>. Nunca los mezcles: multi-cluster NO acelera un query lento individual, y resize NO resuelve problemas de demasiados usuarios concurrentes.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #2 — Warehouse más grande = carga de datos más rápida</div>
+  <p><strong>FALSO.</strong> Aumentar el tamaño del warehouse no garantiza mejor performance en data loading. Depende del número y tamaño de los archivos. Usar un XL para cargar 10 archivos CSV es desperdiciar créditos.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #3 — Multi-cluster requiere Enterprise</div>
+  <p>Sí, multi-cluster warehouses son feature de <strong>Enterprise Edition o superior</strong>. Lo mismo aplica para Query Acceleration Service. El examen puede poner opciones que involucren estas features en contextos de Standard Edition.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #4 — Resize mientras corre el warehouse</div>
+  <p>Es posible hacer resize con el warehouse corriendo. Pero los recursos nuevos <strong>NO benefician queries ya en ejecución</strong> — solo queries en cola y nuevos. El examen puede preguntar si un query actualmente lento se acelera al hacer resize → <strong>NO</strong>, solo nuevos queries.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #5 — Confundir los 3 tipos de cache</div>
+  <p><strong>Query Result Cache:</strong> almacena resultados exactos de queries (capa Cloud Services, 24h, no requiere warehouse). <strong>Metadata Cache:</strong> info de objetos (row count, min/max), gestionado por Cloud Services. <strong>Warehouse Cache (local disk cache):</strong> datos de tablas almacenados en el SSD del compute, se pierde al suspender. El examen los diferencia.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #6 — Scaling Policy: el número 6</div>
+  <p>La policy <strong>Economy</strong> usa el umbral de <strong>6 minutos</strong> para decidir si agrega o remueve clusters. Standard no tiene ese umbral — agrega clusters inmediatamente al detectar queuing. Si te preguntan por una policy que espera antes de agregar clusters → Economy.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #7 — QAS Scale Factor default</div>
+  <p>El scale factor default de QAS es <strong>8</strong>, no 10 ni ilimitado. Un scale factor de <strong>0</strong> significa sin límite. El costo de QAS se cobra <strong>por separado</strong> del warehouse, como recurso serverless, por segundo.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #8 — Auto-suspend en multi-cluster</div>
+  <p>Auto-suspend aplica al <strong>warehouse completo</strong>, no a clusters individuales. El warehouse se suspende solo cuando el número mínimo de clusters está corriendo y no hay actividad. Auto-resume aplica solo cuando <strong>ningún cluster</strong> está corriendo.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #9 — Snowpark-Optimized vs Standard para SQL normal</div>
+  <p>Si un workload es puro SQL/queries analíticos y NO usa Snowpark (Python/Java UDFs, stored procedures, ML), un Snowpark-Optimized warehouse <strong>no aporta beneficio</strong> y consume más créditos por hora. El examen puede presentar escenarios donde la respuesta correcta es Standard.</p>
+</div>
+
+<div class="card card-trap">
+  <div class="card-title">Trampa #10 — Billing al hacer resize de 5XL/6XL a 4XL o menor</div>
+  <p>Al reducir de 5XL/6XL a 4XL o inferior, hay un <strong>breve período de cobro doble</strong> mientras los recursos del warehouse anterior se apagan (quiescing). Esto NO ocurre en otros downsizes.</p>
+</div>
+
+</div><!-- main -->
+
+<script>
+// Simple scroll spy for sidebar
+const sections = document.querySelectorAll('h2[id], h3[id], .top10[id]');
+const links = document.querySelectorAll('.sidebar nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if(window.scrollY >= s.offsetTop - 100) current = s.getAttribute('id');
+  });
+  links.forEach(l => {
+    l.classList.remove('active');
+    if(l.getAttribute('href') === '#' + current) l.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

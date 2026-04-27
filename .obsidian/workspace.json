@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Snowflake/Key Concepts.md",
+                "file": "Tables , Views and Database.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Key Concepts"
+              "title": "Tables , Views and Database"
             }
           }
         ]
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 240.5
   },
   "right": {
     "id": "d4be7fe5e52adc4b",
@@ -185,6 +185,41 @@
   },
   "active": "ff843ea89d8a243e",
   "lastOpenFiles": [
-    "Virtual_Warehouse"
+    "Virtual Warehouse.md",
+    "Tables , Views and Database.md",
+    "vault/Virtual Warehouse.md",
+    "key_features/Snowsight Tour.md",
+    "key_features/Sign In.md",
+    "key_features/Key Features.md",
+    "key_features/Key Concepts.md",
+    "key_features/Ediciones.md",
+    "key_features/Datalife Cycle.md",
+    "key_features/Cloud Platforms.md",
+    "key_features/CDP.md",
+    "key_features",
+    "avances.md",
+    "Accounts, Regions.md",
+    "vault/avances.md",
+    "scripts/get_information_links.md",
+    "scripts/create_final_summary.md",
+    "links/data_loading_links.txt",
+    "links/snowflake_data_loading_links.txt",
+    "vault/Guía Snowflake Pro Core Certification.md",
+    "vault/Cloud Regions.md",
+    "vault/Accounts, Regions.md",
+    "scripts/get_links.md",
+    "scripts/create_summary.md",
+    "scripts/summary_links.md",
+    "oficial_guides/snowpro_advance_data_analyts.pdf",
+    "snowpro_advance_data_analyts.pdf",
+    "scripts/fix_text.md",
+    "vault/key_features/Cloud Platforms.md",
+    "vault/virtual_warehouse/Virtual Warehouse.md",
+    "scripts",
+    "summary_links.md",
+    "html/tables_pro.html",
+    "html/virtual_warehouse_pro.html",
+    "html/virtual_warehouse.html",
+    "html/tables.html"
   ]
 }
