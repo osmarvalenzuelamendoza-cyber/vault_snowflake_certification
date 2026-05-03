@@ -80,7 +80,6 @@ ALTER TABLE nombre_tabla RESUME RECLUSTER;
 | --------------------------------- | ------------------------------------------- |
 | `SYSTEM$CLUSTERING_INFORMATION`   | Estado actual: clustering deep, particiones |
 | `SYSTEM$ESTIMATE_CLUSTERING_KEYS` | Sugiere columnas candidatas                 |
-
 # Tables
 
 ### Comparativa
