@@ -1,7 +1,5 @@
 # Virtual Warehouses en Snowflake
 
-> _Notas para certificación SnowPro Core_
----
 ## 1. Tipos de Virtual Warehouse
 ### 1.1 Standard
 Usa **resource constraints** de generación **Gen1** o **Gen2**.
